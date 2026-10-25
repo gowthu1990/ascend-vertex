@@ -230,8 +230,9 @@
             </div>
             
             <div class="bg-gray-900 rounded-lg p-8 border border-gray-800 shadow-2xl">
-                <!-- Replace YOUR_ACCESS_KEY_HERE with the key Web3Forms emailed you -->
-                <form action="https://api.web3forms.com/submit" method="POST" class="space-y-6">
+                <!-- Notice we changed the form tag to have an id="apply-form" and removed the action/method attributes -->
+                <form id="apply-form" class="space-y-6">
+                    <!-- IMPORTANT: Paste your actual Web3Forms Access Key below! -->
                     <input type="hidden" name="access_key" value="46e92254-b0df-4b5c-8bca-4ad01f1af23b">
                     
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -255,7 +256,6 @@
                         <input type="url" name="linkedin" required class="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-[#00f2fe] focus:border-transparent">
                     </div>
     
-                    <!-- Anti-Spam Honeypot -->
                     <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
     
                     <div>
@@ -263,10 +263,53 @@
                             Submit Application
                         </button>
                     </div>
+                    
+                    <!-- This div handles the success/error message display without leaving the page -->
+                    <p id="form-result" class="text-center font-bold mt-4 hidden"></p>
                 </form>
             </div>
         </div>
     </section>
+    
+    <!-- Add this script block immediately after the section to handle the background POST request -->
+    <script>
+    document.getElementById('apply-form').addEventListener('submit', function(e) {
+        e.preventDefault(); // Stops the default page redirect
+        
+        const form = e.target;
+        const result = document.getElementById('form-result');
+        const formData = new FormData(form);
+        
+        result.classList.remove('hidden');
+        result.classList.add('text-gray-300');
+        result.innerText = "Submitting application...";
+    
+        fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            body: formData
+        })
+        .then(async (response) => {
+            let json = await response.json();
+            if (response.status == 200) {
+                result.classList.remove('text-gray-300', 'text-red-500');
+                result.classList.add('text-green-400');
+                result.innerText = "Application received successfully! We will contact you soon.";
+                form.reset(); // Clears the fields
+            } else {
+                console.log(response);
+                result.classList.remove('text-gray-300');
+                result.classList.add('text-red-500');
+                result.innerText = json.message;
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            result.classList.remove('text-gray-300');
+            result.classList.add('text-red-500');
+            result.innerText = "Something went wrong! Please try again.";
+        });
+    });
+    </script>
 
     <!-- Footer -->
     <footer class="border-t border-slate-800/80 bg-brand-bg pt-12 pb-8 relative z-10">

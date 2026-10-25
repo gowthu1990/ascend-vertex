@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ascend Vertex | Data Engineering Masterclass</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            bg: '#050505', // Near black for deep contrast
+                            card: '#0f172a', // Deep slate for cards
+                            accent: '#00f0ff', // Neon Blue/Cyan
+                            accentHover: '#00c3cf',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050505;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        /* Interactive DAG Canvas Background */
+        #dag-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.35;
+        }
+        .glow-text {
+            text-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
+        }
+        .glow-btn {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .glow-btn:hover {
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+            transform: translateY(-2px);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            border-color: rgba(0, 240, 255, 0.5);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+            transform: translateY(-4px);
+        }
+    </style>
+</head>
+<body class="antialiased font-sans relative">
+
+    <!-- Canvas for DAG / Network Animation -->
+    <canvas id="dag-canvas"></canvas>
+
+    <!-- Navbar -->
+    <nav class="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center relative z-10 border-b border-slate-800/50 backdrop-blur-md">
+        <div class="flex items-center gap-3 text-2xl font-extrabold tracking-tight">
+            <span class="text-brand-accent">▲</span>
+            <span>Ascend Vertex</span>
+        </div>
+        <div class="hidden md:flex gap-8 text-sm font-semibold text-slate-300">
+            <a href="#philosophy" class="hover:text-brand-accent transition">Philosophy</a>
+            <a href="#capstone" class="hover:text-brand-accent transition">Capstone</a>
+            <a href="#curriculum" class="hover:text-brand-accent transition">Curriculum</a>
+            <a href="#mentor" class="hover:text-brand-accent transition">Mentor</a>
+        </div>
+        <a href="#apply" class="hidden md:inline-block bg-brand-accent text-slate-950 font-bold py-2.5 px-6 rounded-md glow-btn">
+            Apply Now
+        </a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="max-w-7xl mx-auto px-6 py-24 md:py-32 relative z-10 flex flex-col items-center text-center">
+        <div class="inline-block border border-brand-accent/40 bg-brand-accent/10 text-brand-accent px-5 py-2 rounded-full text-sm font-semibold mb-8 backdrop-blur-sm">
+            🚀 12-Week Intensive · Next Cohort Open
+        </div>
+        <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6 tracking-tight glow-text">
+            Master the Architecture.<br />
+            <span class="text-slate-400">Elevate Your Career.</span>
+        </h1>
+        <p class="text-lg md:text-xl text-slate-400 max-w-2xl mb-10 leading-relaxed">
+            Join an elite premium masterclass. Learn to design petabyte-scale, real-time data platforms using Kafka, Spark, and GCP under the direct mentorship of a Senior Solution Architect.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-5 w-full sm:w-auto">
+            <a href="#apply" class="bg-brand-accent text-slate-950 font-bold py-4 px-8 rounded-md text-lg glow-btn">
+                Apply for the Next Cohort
+            </a>
+            <a href="#curriculum" class="border border-slate-600 hover:border-brand-accent text-slate-300 hover:text-brand-accent py-4 px-8 rounded-md transition text-lg bg-slate-900/40 backdrop-blur-md">
+                Explore the Curriculum
+            </a>
+        </div>
+    </section>
+
+    <!-- Core Philosophy -->
+    <section id="philosophy" class="bg-brand-card/60 border-y border-slate-800/60 relative z-10 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-6 py-24 flex flex-col md:flex-row gap-16 items-center">
+            <div class="md:w-5/12 text-center md:text-left">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 leading-tight">The gap between writing code and building systems.</h2>
+                <div class="w-16 h-1 bg-brand-accent mb-6 mx-auto md:mx-0"></div>
+            </div>
+            <div class="md:w-7/12 text-lg text-slate-300 leading-relaxed space-y-4">
+                <p>Most data projects fail due to poor architecture, not bad code. Standard bootcamps teach you syntax; Ascend Vertex teaches you how to think like a Solution Architect.</p>
+                <p>You won't just write SQL—you will learn how to defend serialization choices, benchmark sub-millisecond streaming topologies, implement resilient Lakehouse architectures, and build fault-tolerant platforms from the ground up.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capstone Section -->
+    <section id="capstone" class="max-w-7xl mx-auto px-6 py-24 relative z-10">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-extrabold mb-4">Enterprise-Grade Capstone</h2>
+            <h3 class="text-2xl text-brand-accent font-semibold mb-4">Real-Time Fraud Detection Engine</h3>
+            <p class="text-slate-400 max-w-2xl mx-auto text-lg">Forget static, sanitized CSVs. You will architect a stateful streaming pipeline processing cross-continent velocity fraud anomalies in milliseconds.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-8 card-hover backdrop-blur-sm">
+                <div class="text-brand-accent text-3xl mb-4">⚡</div>
+                <h4 class="text-xl font-bold mb-2">Kafka & KRaft</h4>
+                <p class="text-slate-400 text-sm">Deploy clusters, manage partition rebalancing, and guarantee exact-once delivery semantics.</p>
+            </div>
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-8 card-hover backdrop-blur-sm">
+                <div class="text-brand-accent text-3xl mb-4">🌊</div>
+                <h4 class="text-xl font-bold mb-2">Spark & Beam</h4>
+                <p class="text-slate-400 text-sm">Orchestrate unified pipelines, managing watermarks, late data, and complex temporal windowing.</p>
+            </div>
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-8 card-hover backdrop-blur-sm">
+                <div class="text-brand-accent text-3xl mb-4">☁️</div>
+                <h4 class="text-xl font-bold mb-2">Google Cloud Platform</h4>
+                <p class="text-slate-400 text-sm">Leverage GCS, Dataflow runners, and BigQuery's separation of compute and storage.</p>
+            </div>
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-8 card-hover backdrop-blur-sm">
+                <div class="text-brand-accent text-3xl mb-4">⏱️</div>
+                <h4 class="text-xl font-bold mb-2">Apache Airflow</h4>
+                <p class="text-slate-400 text-sm">Write resilient DAGs, configure exponential backoffs, and ensure data idempotency.</p>
+            </div>
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-8 card-hover backdrop-blur-sm">
+                <div class="text-brand-accent text-3xl mb-4">📦</div>
+                <h4 class="text-xl font-bold mb-2">Protobuf & Parquet</h4>
+                <p class="text-slate-400 text-sm">Optimize throughput by benchmarking binary serialization vs JSON on CPU and Network I/O.</p>
+            </div>
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-8 card-hover backdrop-blur-sm">
+                <div class="text-brand-accent text-3xl mb-4">📊</div>
+                <h4 class="text-xl font-bold mb-2">Prometheus & Grafana</h4>
+                <p class="text-slate-400 text-sm">Implement SRE Golden Signals, track consumer lag, and mitigate production alert fatigue.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 12-Week Curriculum Breakdown -->
+    <section id="curriculum" class="bg-brand-card/50 border-y border-slate-800/60 relative z-10 py-24 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-extrabold text-center mb-16">The 12-Week Journey</h2>
+            <div class="max-w-4xl mx-auto space-y-12">
+                <!-- Phase 1 -->
+                <div class="flex gap-6 md:gap-8">
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-brand-accent flex items-center justify-center text-brand-accent font-bold text-lg shadow-[0_0_15px_rgba(0,240,255,0.3)]">1</div>
+                        <div class="w-px h-full bg-slate-700 my-4"></div>
+                    </div>
+                    <div class="pt-2">
+                        <h3 class="text-2xl font-bold text-white mb-1">Foundations & Analytical SQL</h3>
+                        <p class="text-sm font-semibold text-brand-accent mb-3 tracking-wide uppercase">Weeks 1 - 2</p>
+                        <p class="text-slate-400 leading-relaxed">UNIX pipelines, containerized Docker sandboxes, PostgreSQL EXPLAIN plans, CTEs, and Window Functions.</p>
+                    </div>
+                </div>
+                <!-- Phase 2 -->
+                <div class="flex gap-6 md:gap-8">
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-brand-accent flex items-center justify-center text-brand-accent font-bold text-lg shadow-[0_0_15px_rgba(0,240,255,0.3)]">2</div>
+                        <div class="w-px h-full bg-slate-700 my-4"></div>
+                    </div>
+                    <div class="pt-2">
+                        <h3 class="text-2xl font-bold text-white mb-1">Streaming & Distributed Compute</h3>
+                        <p class="text-sm font-semibold text-brand-accent mb-3 tracking-wide uppercase">Weeks 3 - 5</p>
+                        <p class="text-slate-400 leading-relaxed">Kafka deployment, Protobuf benchmarking, PySpark core DataFrame APIs, fixing data skew, and partition strategies.</p>
+                    </div>
+                </div>
+                <!-- Phase 3 -->
+                <div class="flex gap-6 md:gap-8">
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-brand-accent flex items-center justify-center text-brand-accent font-bold text-lg shadow-[0_0_15px_rgba(0,240,255,0.3)]">3</div>
+                        <div class="w-px h-full bg-slate-700 my-4"></div>
+                    </div>
+                    <div class="pt-2">
+                        <h3 class="text-2xl font-bold text-white mb-1">The Lakehouse & Speed Layers</h3>
+                        <p class="text-sm font-semibold text-brand-accent mb-3 tracking-wide uppercase">Weeks 6 - 8</p>
+                        <p class="text-slate-400 leading-relaxed">Medallion architectures, Apache Beam unified streaming, and stateful processing for the Impossible Travel fraud algorithm.</p>
+                    </div>
+                </div>
+                <!-- Phase 4 -->
+                <div class="flex gap-6 md:gap-8">
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-brand-accent flex items-center justify-center text-brand-accent font-bold text-lg shadow-[0_0_15px_rgba(0,240,255,0.3)]">4</div>
+                        <div class="w-px h-full bg-transparent my-4"></div>
+                    </div>
+                    <div class="pt-2">
+                        <h3 class="text-2xl font-bold text-white mb-1">Orchestration & Observability</h3>
+                        <p class="text-sm font-semibold text-brand-accent mb-3 tracking-wide uppercase">Weeks 9 - 12</p>
+                        <p class="text-slate-400 leading-relaxed">Enterprise Airflow DAGs, BigQuery dimensional modeling, SRE Golden Signals, Grafana dashboards, and L1/L2 production runbooks.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About the Mentor -->
+    <section id="mentor" class="max-w-7xl mx-auto px-6 py-24 relative z-10">
+        <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-8 md:p-14 flex flex-col md:flex-row items-center gap-12 backdrop-blur-md">
+            <div class="w-56 h-56 rounded-full bg-slate-950 border-4 border-brand-accent/50 flex-shrink-0 flex items-center justify-center overflow-hidden shadow-[0_0_30px_rgba(0,240,255,0.2)]">
+                 <!-- Placeholder image. Replace href with your actual headshot URL -->
+                 <img src="https://placehold.co/400x400/0f172a/00f0ff?text=SGB" alt="Sai Gowtham Badvity" class="w-full h-full object-cover">
+            </div>
+            <div>
+                <h2 class="text-sm font-bold text-brand-accent tracking-widest uppercase mb-2">Lead Instructor</h2>
+                <h3 class="text-4xl font-extrabold mb-4 text-white">Sai Gowtham Badvity</h3>
+                <p class="text-xl font-semibold text-slate-300 mb-6">Senior Solution Architect</p>
+                <p class="text-slate-400 leading-relaxed mb-8 text-lg">
+                    With over 14 years of rigorous experience designing and deploying big data architectures, real-time analytics platforms, and cloud infrastructure. Driven by an architecture-first engineering mindset, Sai created Ascend Vertex to mentor the next generation of engineers, focusing on first-principles understanding, benchmark-driven optimization, and robust design patterns.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-slate-800 text-slate-200 border border-slate-700">🎓 M.Tech AI/ML @ BITS Pilani</span>
+                    <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-slate-800 text-slate-200 border border-slate-700">⚙️ 14+ Years Enterprise Scaling</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 bg-brand-bg pt-12 pb-8 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-2 text-xl font-bold tracking-tight text-white">
+                <span class="text-brand-accent">▲</span>
+                <span>Ascend Vertex</span>
+            </div>
+            <div class="text-sm text-slate-500 text-center md:text-right">
+                &copy; <span id="year"></span> Ascend Vertex. All rights reserved.<br>
+                <a href="mailto:hello@ascendvertex.com" class="hover:text-brand-accent transition mt-1 inline-block">hello@ascendvertex.com</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Canvas DAG Animation Logic -->
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const canvas = document.getElementById('dag-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let nodes = [];
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Node {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
+                this.radius = Math.random() * 2 + 1.5;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = '#00f0ff'; // Neon blue
+                ctx.fill();
+            }
+        }
+
+        // Adjust node density based on screen size
+        const nodeCount = width < 768 ? 45 : 100;
+        for (let i = 0; i < nodeCount; i++) {
+            nodes.push(new Node());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            for (let i = 0; i < nodes.length; i++) {
+                nodes[i].update();
+                nodes[i].draw();
+                
+                // Draw connecting edges for the DAG effect
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const dx = nodes[i].x - nodes[j].x;
+                    const dy = nodes[i].y - nodes[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 160) {
+                        ctx.beginPath();
+                        ctx.moveTo(nodes[i].x, nodes[i].y);
+                        ctx.lineTo(nodes[j].x, nodes[j].y);
+                        // Fade edges based on distance
+                        ctx.strokeStyle = `rgba(0, 240, 255, ${0.8 - (distance / 160)})`;
+                        ctx.lineWidth = 0.6;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+    </script>
+</body>
+</html>
